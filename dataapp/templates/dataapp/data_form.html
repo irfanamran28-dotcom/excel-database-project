@@ -1,0 +1,35 @@
+{% extends 'dataapp/base_admin.html' %}
+
+{% block title %}{% if mode == 'edit' %}Edit{% else %}Add{% endif %} Excel Data{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% if mode == 'edit' %}✏️ Edit Record{% else %}➕ Add New Record{% endif %}</h1>
+    <p>{% if mode == 'edit' %}Update the record details below{% else %}Fill in the form to add a new record{% endif %}</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <div style="color: #e74c3c; font-size: 13px; margin-top: 5px;">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">{% if mode == 'edit' %}Update{% else %}Save{% endif %} Record</button>
+                <a href="{% url 'data_list_admin' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

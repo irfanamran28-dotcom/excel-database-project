@@ -1,0 +1,35 @@
+{% extends 'dataapp/base_admin.html' %}
+
+{% block title %}{% if mode == 'edit' %}Edit{% else %}Add{% endif %} Friend{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% if mode == 'edit' %}✏️ Edit Friend{% else %}➕ Add New Friend{% endif %}</h1>
+    <p>{% if mode == 'edit' %}Update friend details{% else %}Add a new friend to your list{% endif %}</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <div style="color: #e74c3c; font-size: 13px; margin-top: 5px;">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn btn-success">{% if mode == 'edit' %}Update{% else %}Save{% endif %} Friend</button>
+                <a href="{% url 'friends_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

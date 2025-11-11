@@ -1,0 +1,75 @@
+{% extends 'dataapp/base_admin.html' %}
+
+{% block title %}Friends - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Friends Management</h1>
+    <p>Manage your friends list</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>👥 All Friends ({{ friends_page.paginator.count }})</h2>
+        <a href="{% url 'friend_add' %}" class="btn btn-success">+ Add New Friend</a>
+    </div>
+    <div class="card-body">
+        <div class="search-bar">
+            <form method="GET">
+                <input type="text" name="search" placeholder="Search friends..." value="{{ search }}" class="form-control" style="width: 300px; display: inline-block;">
+                <button type="submit" class="btn btn-primary">Search</button>
+                {% if search %}
+                <a href="{% url 'friends_list' %}" class="btn btn-secondary">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        {% if friends_page %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Added</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for friend in friends_page %}
+                <tr>
+                    <td>{{ friend.name }}</td>
+                    <td>{{ friend.email|default:"N/A" }}</td>
+                    <td>{{ friend.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'friend_edit' friend.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'friend_delete' friend.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if friends_page.has_other_pages %}
+        <div style="text-align: center; margin-top: 20px;">
+            {% if friends_page.has_previous %}
+            <a href="?page=1&search={{ search }}" class="btn btn-secondary btn-sm">First</a>
+            <a href="?page={{ friends_page.previous_page_number }}&search={{ search }}" class="btn btn-secondary btn-sm">Previous</a>
+            {% endif %}
+            
+            <span style="margin: 0 10px;">Page {{ friends_page.number }} of {{ friends_page.paginator.num_pages }}</span>
+            
+            {% if friends_page.has_next %}
+            <a href="?page={{ friends_page.next_page_number }}&search={{ search }}" class="btn btn-secondary btn-sm">Next</a>
+            <a href="?page={{ friends_page.paginator.num_pages }}&search={{ search }}" class="btn btn-secondary btn-sm">Last</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% else %}
+        <p style="text-align: center; color: #7f8c8d; padding: 40px;">No friends yet. <a href="{% url 'friend_add' %}">Add your first friend!</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

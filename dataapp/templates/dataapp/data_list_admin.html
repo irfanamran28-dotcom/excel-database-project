@@ -1,0 +1,78 @@
+{% extends 'dataapp/base_admin.html' %}
+
+{% block title %}Excel Data - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Excel Data Management</h1>
+    <p>View, edit, and manage your Excel data records</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>📋 All Records ({{ data_page.paginator.count }})</h2>
+        <a href="{% url 'data_add_admin' %}" class="btn btn-primary">+ Add New Record</a>
+    </div>
+    <div class="card-body">
+        <div class="search-bar">
+            <form method="GET">
+                <input type="text" name="search" placeholder="Search..." value="{{ search }}" class="form-control" style="width: 300px; display: inline-block;">
+                <button type="submit" class="btn btn-primary">Search</button>
+                {% if search %}
+                <a href="{% url 'data_list_admin' %}" class="btn btn-secondary">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        {% if data_page %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data_page %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.column1|truncatewords:8 }}</td>
+                    <td>{{ item.column2|truncatewords:8 }}</td>
+                    <td>{{ item.column3|truncatewords:8 }}</td>
+                    <td>{{ item.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'data_edit_admin' item.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'data_delete_admin' item.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if data_page.has_other_pages %}
+        <div style="text-align: center; margin-top: 20px;">
+            {% if data_page.has_previous %}
+            <a href="?page=1&search={{ search }}" class="btn btn-secondary btn-sm">First</a>
+            <a href="?page={{ data_page.previous_page_number }}&search={{ search }}" class="btn btn-secondary btn-sm">Previous</a>
+            {% endif %}
+            
+            <span style="margin: 0 10px;">Page {{ data_page.number }} of {{ data_page.paginator.num_pages }}</span>
+            
+            {% if data_page.has_next %}
+            <a href="?page={{ data_page.next_page_number }}&search={{ search }}" class="btn btn-secondary btn-sm">Next</a>
+            <a href="?page={{ data_page.paginator.num_pages }}&search={{ search }}" class="btn btn-secondary btn-sm">Last</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% else %}
+        <p style="text-align: center; color: #7f8c8d; padding: 40px;">No records found. <a href="{% url 'data_add_admin' %}">Add your first record!</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

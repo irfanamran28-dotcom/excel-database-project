@@ -1,0 +1,93 @@
+{% extends 'dataapp/base_admin.html' %}
+
+{% block title %}Dashboard - Excel Database{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Welcome back, {{ request.user.username }}! Here's your overview.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Records</h3>
+        <div class="number">{{ total_records }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Total Friends</h3>
+        <div class="number">{{ total_friends }}</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div class="card">
+        <div class="card-header">
+            <h2>📋 Recent Excel Data</h2>
+            <a href="{% url 'data_add_admin' %}" class="btn btn-primary btn-sm">+ Add New</a>
+        </div>
+        <div class="card-body">
+            {% if recent_data %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Column 1</th>
+                        <th>Column 2</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent_data %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.column1|truncatewords:5 }}</td>
+                        <td>{{ item.column2|truncatewords:5 }}</td>
+                        <td>{{ item.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="{% url 'data_list_admin' %}" class="btn btn-primary btn-sm">View All Data</a>
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #7f8c8d; padding: 20px;">No records yet. <a href="{% url 'data_add_admin' %}">Add your first one!</a></p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>👥 Recent Friends</h2>
+            <a href="{% url 'friend_add' %}" class="btn btn-success btn-sm">+ Add Friend</a>
+        </div>
+        <div class="card-body">
+            {% if recent_friends %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Date Added</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for friend in recent_friends %}
+                    <tr>
+                        <td>{{ friend.name }}</td>
+                        <td>{{ friend.email|default:"N/A" }}</td>
+                        <td>{{ friend.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="{% url 'friends_list' %}" class="btn btn-success btn-sm">View All Friends</a>
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #7f8c8d; padding: 20px;">No friends yet. <a href="{% url 'friend_add' %}">Add your first friend!</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'dataapp/base_admin.html' %}
+
+{% block title %}Delete Friend{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🗑️ Delete Friend</h1>
+    <p>Are you sure you want to remove this friend?</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div style="background: #f8d7da; padding: 20px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #e74c3c;">
+            <h3 style="color: #721c24; margin-bottom: 15px;">Friend Details:</h3>
+            <p><strong>Name:</strong> {{ friend.name }}</p>
+            <p><strong>Email:</strong> {{ friend.email|default:"N/A" }}</p>
+            <p><strong>Notes:</strong> {{ friend.notes|truncatewords:20|default:"N/A" }}</p>
+            <p><strong>Added:</strong> {{ friend.created_at|date:"M d, Y H:i" }}</p>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-danger">Yes, Delete This Friend</button>
+                <a href="{% url 'friends_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
