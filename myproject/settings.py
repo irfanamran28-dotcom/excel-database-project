@@ -129,19 +129,33 @@ LOGIN_REDIRECT_URL = '/data/dashboard/'
 LOGOUT_REDIRECT_URL = '/data/login/'
 
 import os
-import dj_database_url
+
+# Try to import dj_database_url if available; otherwise fall back to default sqlite config
+try:
+    import dj_database_url
+except Exception:
+    dj_database_url = None
 
 # For Render
 DEBUG = False
 ALLOWED_HOSTS = ['your-app-name.onrender.com']
 
-# Database (Render provides PostgreSQL)
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
+# Database (Render provides PostgreSQL if dj_database_url is available)
+if dj_database_url:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default='sqlite:///db.sqlite3',
+            conn_max_age=600
+        )
+    }
+else:
+    # Fallback to the local sqlite database when dj-database-url is not installed
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Static files
 STATIC_URL = '/static/'
