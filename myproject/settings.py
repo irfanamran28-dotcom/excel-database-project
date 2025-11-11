@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-x858n0n8$c66)!(xig1=cel5-!ni$3-^olp$4mo4n8i-$q!&ws
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'excel-database-project.onrender.com',  # Replace with your actual Render URL
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -138,7 +142,7 @@ except Exception:
 
 # For Render
 DEBUG = False
-ALLOWED_HOSTS = ['your-app-name.onrender.com']
+ALLOWED_HOSTS = ['excel-database-project.com']
 
 # Database (Render provides PostgreSQL if dj_database_url is available)
 if dj_database_url:
