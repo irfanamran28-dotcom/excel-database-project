@@ -124,6 +124,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 if ON_RENDER:
     CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
+# Minimal logging to capture errors to a file for easier diagnosis (500 tracebacks)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'django_error.log',
+            'encoding': 'utf-8',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['file', 'console'],
+        'level': 'ERROR',
+    },
+}
+
 
 
 
