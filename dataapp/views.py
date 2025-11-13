@@ -185,3 +185,66 @@ def friend_delete_view(request, pk):
         return redirect('friends_list')
     
     return render(request, 'dataapp/friend_delete.html', {'friend': friend})
+
+@login_required
+def export_to_excel(request):
+    """Export Excel data to Excel file"""
+    import openpyxl
+    from openpyxl.styles import Font, Alignment, PatternFill
+    from django.http import HttpResponse
+    from datetime import datetime
+    
+    # Create workbook
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Excel Data"
+    
+    # Add headers
+    headers = ['ID', 'Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5', 'Column 6', 'Created At']
+    ws.append(headers)
+    
+    # Style headers
+    header_fill = PatternFill(start_color='4472C4', end_color='4472C4', fill_type='solid')
+    header_font = Font(bold=True, color='FFFFFF')
+    
+    for cell in ws[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal='center', vertical='center')
+    
+    # Add data
+    data = ExcelData.objects.filter(created_by=request.user)
+    for item in data:
+        ws.append([
+            item.id,
+            item.column1,
+            item.column2,
+            item.column3,
+            item.column4,
+            item.column5,
+            item.column6.strftime('%Y-%m-%d') if item.column6 else '',
+            item.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+    
+    # Adjust column widths
+    for column in ws.columns:
+        max_length = 0
+        column = [cell for cell in column]
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        ws.column_dimensions[column[0].column_letter].width = adjusted_width
+    
+    # Prepare response
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    filename = f'excel_data_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    wb.save(response)
+    return response

@@ -11,7 +11,10 @@
 <div class="card">
     <div class="card-header">
         <h2>📋 All Records ({{ data_page.paginator.count }})</h2>
-        <a href="{% url 'data_add_admin' %}" class="btn btn-primary">+ Add New Record</a>
+        <div style="display: flex; gap: 10px;">
+    <a href="{% url 'data_add_admin' %}" class="btn btn-primary">+ Add New Record</a>
+    <a href="{% url 'export_excel' %}" class="btn btn-success">📥 Export to Excel</a>
+</div>
     </div>
     <div class="card-body">
         <div class="search-bar">

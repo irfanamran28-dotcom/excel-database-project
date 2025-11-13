@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     # Auth
     path('login/', views.login_view, name='login'),
@@ -15,6 +16,7 @@ urlpatterns = [
     path('data/add/', views.data_add_view, name='data_add_admin'),
     path('data/edit/<int:pk>/', views.data_edit_view, name='data_edit_admin'),
     path('data/delete/<int:pk>/', views.data_delete_view, name='data_delete_admin'),
+    path('data/export/', views.export_to_excel, name='export_excel'),  # Add this line
     
     # Friends
     path('friends/', views.friends_list_view, name='friends_list'),
@@ -22,4 +24,5 @@ urlpatterns = [
     path('friends/edit/<int:pk>/', views.friend_edit_view, name='friend_edit'),
     path('friends/delete/<int:pk>/', views.friend_delete_view, name='friend_delete'),
 ]
+
 
