@@ -243,7 +243,9 @@ def export_to_excel(request):
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    filename = f'excel_data_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+    
+    now_myt = datetime.now(malaysia_tz)
+    filename = f'excel_data_{now_myt.strftime("%Y%m%d_%H%M%S")}_MYT.xlsx'
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     wb.save(response)
